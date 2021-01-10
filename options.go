@@ -3,7 +3,7 @@ package zerolog
 import (
 	"github.com/rs/zerolog"
 
-	"github.com/micro/go-micro/v2/logger"
+	"github.com/unistack-org/micro/v3/logger"
 )
 
 type Options struct {
@@ -63,4 +63,10 @@ type exitKey struct{}
 
 func WithExitFunc(exit func(int)) logger.Option {
 	return logger.SetOption(exitKey{}, exit)
+}
+
+type loggerKey struct{}
+
+func WithLogger(l logger.Logger) logger.Option {
+	return logger.SetOption(loggerKey{}, l)
 }

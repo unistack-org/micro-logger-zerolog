@@ -1,8 +1,8 @@
-module github.com/micro/go-plugins/logger/zerolog/v2
+module github.com/unistack-org/micro-logger-zerolog
 
-go 1.13
+go 1.14
 
 require (
-	github.com/micro/go-micro/v2 v2.9.1
-	github.com/rs/zerolog v1.18.0
+	github.com/rs/zerolog v1.20.0
+	github.com/unistack-org/micro/v3 v3.0.0-gamma.0.20201110191816-6dc7e792c890
 )

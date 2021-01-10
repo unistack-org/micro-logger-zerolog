@@ -10,8 +10,7 @@ import (
 	"github.com/rs/zerolog"
 	zlog "github.com/rs/zerolog/log"
 	"github.com/rs/zerolog/pkgerrors"
-
-	"github.com/micro/go-micro/v2/logger"
+	"github.com/unistack-org/micro/v3/logger"
 )
 
 type Mode uint8
@@ -29,6 +28,11 @@ type zeroLogger struct {
 func (l *zeroLogger) Init(opts ...logger.Option) error {
 	for _, o := range opts {
 		o(&l.opts.Options)
+	}
+
+	if zl, ok := l.opts.Context.Value(loggerKey{}).(zerolog.Logger); ok {
+		l.zLog = zl
+		return nil
 	}
 
 	if hs, ok := l.opts.Context.Value(hooksKey{}).([]zerolog.Hook); ok {
@@ -123,26 +127,69 @@ func (l *zeroLogger) Fields(fields map[string]interface{}) logger.Logger {
 	return l
 }
 
-func (l *zeroLogger) Error(err error) logger.Logger {
-	l.zLog = l.zLog.With().Fields(map[string]interface{}{zerolog.ErrorFieldName: err}).Logger()
-	return l
+func (l *zeroLogger) V(level logger.Level) bool {
+	return l.zLog.GetLevel() >= loggerToZerologLevel(level)
 }
 
-func (l *zeroLogger) Log(level logger.Level, args ...interface{}) {
+func (l *zeroLogger) Info(args ...interface{}) {
+	l.log(logger.InfoLevel, args...)
+}
+
+func (l *zeroLogger) Error(args ...interface{}) {
+	l.log(logger.ErrorLevel, args...)
+}
+
+func (l *zeroLogger) Warn(args ...interface{}) {
+	l.log(logger.WarnLevel, args...)
+}
+
+func (l *zeroLogger) Debug(args ...interface{}) {
+	l.log(logger.DebugLevel, args...)
+}
+
+func (l *zeroLogger) Trace(args ...interface{}) {
+	l.log(logger.TraceLevel, args...)
+}
+
+func (l *zeroLogger) Fatal(args ...interface{}) {
+	l.log(logger.FatalLevel, args...)
+	// Invoke os.Exit because unlike zerolog.Logger.Fatal zerolog.Logger.WithLevel won't stop the execution.
+	l.opts.ExitFunc(1)
+}
+
+func (l *zeroLogger) Infof(msg string, args ...interface{}) {
+	l.logf(logger.InfoLevel, msg, args...)
+}
+
+func (l *zeroLogger) Errorf(msg string, args ...interface{}) {
+	l.logf(logger.ErrorLevel, msg, args...)
+}
+
+func (l *zeroLogger) Warnf(msg string, args ...interface{}) {
+	l.logf(logger.WarnLevel, msg, args...)
+}
+
+func (l *zeroLogger) Debugf(msg string, args ...interface{}) {
+	l.logf(logger.DebugLevel, msg, args...)
+}
+
+func (l *zeroLogger) Tracef(msg string, args ...interface{}) {
+	l.logf(logger.TraceLevel, msg, args...)
+}
+
+func (l *zeroLogger) Fatalf(msg string, args ...interface{}) {
+	l.logf(logger.FatalLevel, msg, args...)
+	// Invoke os.Exit because unlike zerolog.Logger.Fatal zerolog.Logger.WithLevel won't stop the execution.
+	l.opts.ExitFunc(1)
+}
+
+func (l *zeroLogger) log(level logger.Level, args ...interface{}) {
 	msg := fmt.Sprint(args...)
 	l.zLog.WithLevel(loggerToZerologLevel(level)).Msg(msg)
-	// Invoke os.Exit because unlike zerolog.Logger.Fatal zerolog.Logger.WithLevel won't stop the execution.
-	if level == logger.FatalLevel {
-		l.opts.ExitFunc(1)
-	}
 }
 
-func (l *zeroLogger) Logf(level logger.Level, format string, args ...interface{}) {
+func (l *zeroLogger) logf(level logger.Level, format string, args ...interface{}) {
 	l.zLog.WithLevel(loggerToZerologLevel(level)).Msgf(format, args...)
-	// Invoke os.Exit because unlike zerolog.Logger.Fatal zerolog.Logger.WithLevel won't stop the execution.
-	if level == logger.FatalLevel {
-		l.opts.ExitFunc(1)
-	}
 }
 
 func (l *zeroLogger) String() string {
