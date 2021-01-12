@@ -205,7 +205,6 @@ func (l *zeroLogger) String() string {
 }
 
 func (l *zeroLogger) Options() logger.Options {
-	// FIXME: How to return full opts?
 	return l.opts.Options
 }
 
@@ -213,12 +212,7 @@ func (l *zeroLogger) Options() logger.Options {
 func NewLogger(opts ...logger.Option) logger.Logger {
 	// Default options
 	options := Options{
-		Options: logger.Options{
-			Level:   100,
-			Fields:  make(map[string]interface{}),
-			Out:     os.Stderr,
-			Context: context.Background(),
-		},
+		Options:      logger.NewOptions(opts...),
 		ReportCaller: false,
 		UseAsDefault: false,
 		Mode:         Production,
@@ -226,7 +220,6 @@ func NewLogger(opts ...logger.Option) logger.Logger {
 	}
 
 	l := &zeroLogger{opts: options}
-	_ = l.Init(opts...)
 	return l
 }
 
