@@ -131,64 +131,72 @@ func (l *zeroLogger) V(level logger.Level) bool {
 	return l.zLog.GetLevel() >= loggerToZerologLevel(level)
 }
 
-func (l *zeroLogger) Info(args ...interface{}) {
-	l.log(logger.InfoLevel, args...)
+func (l *zeroLogger) Info(ctx context.Context, args ...interface{}) {
+	l.Log(ctx, logger.InfoLevel, args...)
 }
 
-func (l *zeroLogger) Error(args ...interface{}) {
-	l.log(logger.ErrorLevel, args...)
+func (l *zeroLogger) Error(ctx context.Context, args ...interface{}) {
+	l.Log(ctx, logger.ErrorLevel, args...)
 }
 
-func (l *zeroLogger) Warn(args ...interface{}) {
-	l.log(logger.WarnLevel, args...)
+func (l *zeroLogger) Warn(ctx context.Context, args ...interface{}) {
+	l.Log(ctx, logger.WarnLevel, args...)
 }
 
-func (l *zeroLogger) Debug(args ...interface{}) {
-	l.log(logger.DebugLevel, args...)
+func (l *zeroLogger) Debug(ctx context.Context, args ...interface{}) {
+	l.Log(ctx, logger.DebugLevel, args...)
 }
 
-func (l *zeroLogger) Trace(args ...interface{}) {
-	l.log(logger.TraceLevel, args...)
+func (l *zeroLogger) Trace(ctx context.Context, args ...interface{}) {
+	l.Log(ctx, logger.TraceLevel, args...)
 }
 
-func (l *zeroLogger) Fatal(args ...interface{}) {
-	l.log(logger.FatalLevel, args...)
+func (l *zeroLogger) Fatal(ctx context.Context, args ...interface{}) {
+	l.Log(ctx, logger.FatalLevel, args...)
 	// Invoke os.Exit because unlike zerolog.Logger.Fatal zerolog.Logger.WithLevel won't stop the execution.
 	l.opts.ExitFunc(1)
 }
 
-func (l *zeroLogger) Infof(msg string, args ...interface{}) {
-	l.logf(logger.InfoLevel, msg, args...)
+func (l *zeroLogger) Infof(ctx context.Context, msg string, args ...interface{}) {
+	l.Logf(ctx, logger.InfoLevel, msg, args...)
 }
 
-func (l *zeroLogger) Errorf(msg string, args ...interface{}) {
-	l.logf(logger.ErrorLevel, msg, args...)
+func (l *zeroLogger) Errorf(ctx context.Context, msg string, args ...interface{}) {
+	l.Logf(ctx, logger.ErrorLevel, msg, args...)
 }
 
-func (l *zeroLogger) Warnf(msg string, args ...interface{}) {
-	l.logf(logger.WarnLevel, msg, args...)
+func (l *zeroLogger) Warnf(ctx context.Context, msg string, args ...interface{}) {
+	l.Logf(ctx, logger.WarnLevel, msg, args...)
 }
 
-func (l *zeroLogger) Debugf(msg string, args ...interface{}) {
-	l.logf(logger.DebugLevel, msg, args...)
+func (l *zeroLogger) Debugf(ctx context.Context, msg string, args ...interface{}) {
+	l.Logf(ctx, logger.DebugLevel, msg, args...)
 }
 
-func (l *zeroLogger) Tracef(msg string, args ...interface{}) {
-	l.logf(logger.TraceLevel, msg, args...)
+func (l *zeroLogger) Tracef(ctx context.Context, msg string, args ...interface{}) {
+	l.Logf(ctx, logger.TraceLevel, msg, args...)
 }
 
-func (l *zeroLogger) Fatalf(msg string, args ...interface{}) {
-	l.logf(logger.FatalLevel, msg, args...)
+func (l *zeroLogger) Fatalf(ctx context.Context, msg string, args ...interface{}) {
+	l.Logf(ctx, logger.FatalLevel, msg, args...)
 	// Invoke os.Exit because unlike zerolog.Logger.Fatal zerolog.Logger.WithLevel won't stop the execution.
 	l.opts.ExitFunc(1)
 }
 
-func (l *zeroLogger) log(level logger.Level, args ...interface{}) {
+func (l *zeroLogger) Log(ctx context.Context, level logger.Level, args ...interface{}) {
+	if !l.V(level) {
+		return
+	}
+
 	msg := fmt.Sprint(args...)
 	l.zLog.WithLevel(loggerToZerologLevel(level)).Msg(msg)
 }
 
-func (l *zeroLogger) logf(level logger.Level, format string, args ...interface{}) {
+func (l *zeroLogger) Logf(ctx context.Context, level logger.Level, format string, args ...interface{}) {
+	if !l.V(level) {
+		return
+	}
+
 	l.zLog.WithLevel(loggerToZerologLevel(level)).Msgf(format, args...)
 }
 
