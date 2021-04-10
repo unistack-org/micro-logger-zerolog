@@ -4,5 +4,5 @@ go 1.14
 
 require (
 	github.com/rs/zerolog v1.21.0
-	github.com/unistack-org/micro/v3 v3.3.12
+	github.com/unistack-org/micro/v3 v3.3.13
 )
