@@ -324,6 +324,8 @@ github.com/unistack-org/micro/v3 v3.3.13/go.mod h1:98hNcMXp/WyWJwLwCuwrhN1Jm7aCW
 github.com/unistack-org/micro/v3 v3.3.14 h1:CAkDMjHZT8/D6GGF5h3gK84m6tlWZC17IGPb2GkAn/4=
 github.com/unistack-org/micro/v3 v3.3.14/go.mod h1:ETGcQQUcjxGaD44LUMX+0fgo8Loh7ExldfIPLvfUmDo=
 github.com/unistack-org/micro/v3 v3.3.15/go.mod h1:ETGcQQUcjxGaD44LUMX+0fgo8Loh7ExldfIPLvfUmDo=
+github.com/unistack-org/micro/v3 v3.3.16 h1:v0h/oC0TO2n1djQJeOjD2jNEqKkiykwI6cpflEVTlQE=
+github.com/unistack-org/micro/v3 v3.3.16/go.mod h1:ETGcQQUcjxGaD44LUMX+0fgo8Loh7ExldfIPLvfUmDo=
 github.com/urfave/cli v1.22.1/go.mod h1:Gos4lmkARVdJ6EkW0WaNv/tZAAMe9V7XWyB60NtXRu0=
 github.com/vultr/govultr v0.4.2/go.mod h1:TUuUizMOFc7z+PNMssb6iGjKjQfpw5arIaOLfocVudQ=
 github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f/go.mod h1:N2zxlSyiKSe5eX1tZViRH5QA0qijqEDrYZiPEAiq3wU=
