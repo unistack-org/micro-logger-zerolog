@@ -57,17 +57,13 @@ func TestWithDevelopmentMode(t *testing.T) {
 func TestWithFields(t *testing.T) {
 	logger.DefaultLogger = NewLogger()
 	logger.DefaultLogger.Init()
-	logger.Fields(map[string]interface{}{
-		"sumo":  "demo",
-		"human": true,
-		"age":   99,
-	}).Infof(context.TODO(), "testing: %s", "WithFields")
+	logger.Fields("sumo", "demo", "human", true, "age", 99).Infof(context.TODO(), "testing: %s", "WithFields")
 }
 
 func TestWithError(t *testing.T) {
 	logger.DefaultLogger = NewLogger()
 	logger.DefaultLogger.Init()
-	logger.Fields(map[string]interface{}{"error": errors.New("I am Error")}).Errorf(context.TODO(), "testing: %s", "WithError")
+	logger.Fields("error", errors.New("I am Error")).Errorf(context.TODO(), "testing: %s", "WithError")
 }
 
 func TestWithHooks(t *testing.T) {

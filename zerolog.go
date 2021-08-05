@@ -111,7 +111,11 @@ func (l *zeroLogger) Init(opts ...logger.Option) error {
 
 	// Adding seed fields if exist
 	if l.opts.Fields != nil {
-		l.zLog = l.zLog.With().Fields(l.opts.Fields).Logger()
+		data := make(map[string]interface{}, len(l.opts.Fields)/2)
+		for i := 0; i < len(l.opts.Fields); i += 2 {
+			data[l.opts.Fields[i].(string)] = l.opts.Fields[i+1]
+		}
+		l.zLog = l.zLog.With().Fields(data).Logger()
 	}
 
 	// Also set it as zerolog's Default logger
@@ -122,8 +126,12 @@ func (l *zeroLogger) Init(opts ...logger.Option) error {
 	return nil
 }
 
-func (l *zeroLogger) Fields(fields map[string]interface{}) logger.Logger {
-	l.zLog = l.zLog.With().Fields(fields).Logger()
+func (l *zeroLogger) Fields(fields ...interface{}) logger.Logger {
+	data := make(map[string]interface{}, len(fields)/2)
+	for i := 0; i < len(fields); i += 2 {
+		data[fields[i].(string)] = fields[i+1]
+	}
+	l.zLog = l.zLog.With().Fields(data).Logger()
 	return l
 }
 
