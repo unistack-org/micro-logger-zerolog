@@ -25,6 +25,9 @@ type zeroLogger struct {
 	opts Options
 }
 
+func (l *zeroLogger) Clone(opts ...logger.Option) logger.Logger {
+}
+
 func (l *zeroLogger) Init(opts ...logger.Option) error {
 	for _, o := range opts {
 		o(&l.opts.Options)
@@ -77,7 +80,7 @@ func (l *zeroLogger) Init(opts ...logger.Option) error {
 				w.NoColor = false
 			},
 		)
-		//level = logger.DebugLevel
+		// level = logger.DebugLevel
 		l.zLog = zerolog.New(consOut).
 			Level(zerolog.DebugLevel).
 			With().Timestamp().Stack().Logger()
