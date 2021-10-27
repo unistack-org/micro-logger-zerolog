@@ -1,4 +1,4 @@
-package zerolog
+package zerolog // import "go.unistack.org/micro-logger-zerolog/v3"
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/rs/zerolog"
 	zlog "github.com/rs/zerolog/log"
 	"github.com/rs/zerolog/pkgerrors"
-	"github.com/unistack-org/micro/v3/logger"
+	"go.unistack.org/micro/v3/logger"
 )
 
 type Mode uint8
@@ -25,7 +25,17 @@ type zeroLogger struct {
 	opts Options
 }
 
+func (l *zeroLogger) Level(lvl logger.Level) {
+}
+
 func (l *zeroLogger) Clone(opts ...logger.Option) logger.Logger {
+	nl := &zeroLogger{zLog: l.zLog, opts: l.opts}
+	for _, o := range opts {
+		o(&nl.opts.Options)
+	}
+
+	_ = nl.Init()
+	return nl
 }
 
 func (l *zeroLogger) Init(opts ...logger.Option) error {
