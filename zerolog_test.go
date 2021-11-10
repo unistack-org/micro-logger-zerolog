@@ -1,6 +1,7 @@
 package zerolog
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"os"
@@ -10,6 +11,18 @@ import (
 	"github.com/rs/zerolog"
 	"go.unistack.org/micro/v3/logger"
 )
+
+func TestOutput(t *testing.T) {
+	buf := bytes.NewBuffer(nil)
+	l := NewLogger(logger.WithOutput(buf))
+	if err := l.Init(); err != nil {
+		t.Fatal(err)
+	}
+	l.Infof(context.TODO(), "test logger name: %s", "name")
+	if !bytes.Contains(buf.Bytes(), []byte(`test logger name`)) {
+		t.Fatalf("log not redirected: %s", buf.Bytes())
+	}
+}
 
 func TestName(t *testing.T) {
 	l := NewLogger()
