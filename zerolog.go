@@ -149,7 +149,7 @@ func (l *zeroLogger) Fields(fields ...interface{}) logger.Logger {
 }
 
 func (l *zeroLogger) V(level logger.Level) bool {
-	return l.zLog.GetLevel() >= loggerToZerologLevel(level)
+	return l.zLog.GetLevel() <= loggerToZerologLevel(level)
 }
 
 func (l *zeroLogger) Info(ctx context.Context, args ...interface{}) {

@@ -12,6 +12,19 @@ import (
 	"go.unistack.org/micro/v3/logger"
 )
 
+func TestFields(t *testing.T) {
+	ctx := context.TODO()
+	buf := bytes.NewBuffer(nil)
+	l := NewLogger(logger.WithLevel(logger.TraceLevel), logger.WithOutput(buf))
+	if err := l.Init(); err != nil {
+		t.Fatal(err)
+	}
+	l.Fields("key", "val").Infof(ctx, "message")
+	if !bytes.Contains(buf.Bytes(), []byte(`"key":"val"`)) {
+		t.Fatalf("logger fields not works, buf contains: %s", buf.Bytes())
+	}
+}
+
 func TestOutput(t *testing.T) {
 	buf := bytes.NewBuffer(nil)
 	l := NewLogger(logger.WithOutput(buf))
