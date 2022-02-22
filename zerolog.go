@@ -126,7 +126,11 @@ func (l *zeroLogger) Init(opts ...logger.Option) error {
 	if l.opts.Fields != nil {
 		data := make(map[string]interface{}, len(l.opts.Fields)/2)
 		for i := 0; i < len(l.opts.Fields); i += 2 {
-			data[l.opts.Fields[i].(string)] = l.opts.Fields[i+1]
+			fld, ok := l.opts.Fields[i].(string)
+			if !ok {
+				return fmt.Errorf("field type invalid %T not string", l.opts.Fields[i])
+			}
+			data[fld] = l.opts.Fields[i+1]
 		}
 		l.zLog = l.zLog.With().Fields(data).Logger()
 	}
@@ -140,16 +144,11 @@ func (l *zeroLogger) Init(opts ...logger.Option) error {
 }
 
 func (l *zeroLogger) Fields(fields ...interface{}) logger.Logger {
-	data := make(map[string]interface{}, len(fields)/2)
-	for i := 0; i < len(fields); i += 2 {
-		data[fields[i].(string)] = fields[i+1]
-	}
-	l.zLog = l.zLog.With().Fields(data).Logger()
-	return l
+	return l.Clone(logger.WithFields(fields...))
 }
 
 func (l *zeroLogger) V(level logger.Level) bool {
-	return l.zLog.GetLevel() >= loggerToZerologLevel(level)
+	return l.zLog.GetLevel() <= loggerToZerologLevel(level)
 }
 
 func (l *zeroLogger) Info(ctx context.Context, args ...interface{}) {
