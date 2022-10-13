@@ -33,7 +33,7 @@ func (l *zeroLogger) Clone(opts ...logger.Option) logger.Logger {
 	for _, o := range opts {
 		o(&nl.opts.Options)
 	}
-
+	nl.opts.Options.Fields = append(l.opts.Options.Fields, nl.opts.Options.Fields...)
 	_ = nl.Init()
 	return nl
 }
