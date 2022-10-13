@@ -25,9 +25,9 @@ func TestFields(t *testing.T) {
 		t.Fatalf("logger fields not works, buf contains: %s", buf.Bytes())
 	}
 	buf.Reset()
-	mnl := l.Fields(map[string]interface{}{"key": "val"})
+	mnl := nl.Fields("key1", "val1")
 	mnl.Infof(ctx, "message")
-	if bytes.Contains(buf.Bytes(), []byte(`"key":"val"`)) {
+	if !bytes.Contains(buf.Bytes(), []byte(`"key1":"val1"`)) || !bytes.Contains(buf.Bytes(), []byte(`"key":"val"`)) {
 		t.Fatalf("logger fields not works, buf contains: %s", buf.Bytes())
 	}
 }
